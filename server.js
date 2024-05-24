@@ -16,19 +16,18 @@ mongoose.connect('mongodb://127.0.0.1:27017/cv').then(()=>{
 })
 
 app.get('/cv', async(req, res)=>{
-    res.json({message: 'welcome to my API'});
+    res.json({message: 'welcome to my API!'});
 })
 
 //ccreate schema
-const JobScheme = mongoose.Schema(
-   {
+const JobScheme = mongoose.Schema({
     companyname: {
         type: String,
-        required: [true, "Du måste ange företagsnamnet"]
+        required: true,
     },
     jobtitle: {
         type: String,
-        requred: [true, "Du måste ange jobtitel"]
+        required: true
     },
     startdate: {
         type: String,
@@ -38,8 +37,7 @@ const JobScheme = mongoose.Schema(
         type: String,
         required: false
     }
-   }
-);
+   });
 
 //create model
 const Job = mongoose.model('Job', JobScheme);
@@ -61,9 +59,9 @@ app.post('/jobs', async(req, res)=>{
 
        return res.json(result);
     }catch(error){
-        return res.status(500).json(error);
+        return res.status(400).json(error);
     }
-})
+});
 //delete jobs with id
 app.delete('/jobs/:id', async(req, res)=>{
     let id = req.params.id;
@@ -79,7 +77,7 @@ app.put('/jobs/:id', async(req, res)=>{
         const updatedJob = await Job.findByIdAndUpdate(id, {companyname, jobtitle, startdate, enddate}, {new:true});
         return res.json(updatedJob);
     }catch(error){
-        console.log(error);
+       return res.status(500).json(error);
     }
 
    
