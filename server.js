@@ -5,8 +5,18 @@ const mongoose = require('mongoose');
 const app = express();
 const port = process.env.PORT || 3001;
 
+//Används cors-middleware
 app.use(cors());
+//Använd express
 app.use(express.json());
+
+app.use((req, res, next) => {
+    res.on('finish', () => {
+        console.log('Response Headers:', res.getHeaders());
+    });
+    next();
+});
+
 
 //connect to mongoDB
 mongoose.connect('mongodb://127.0.0.1:27017/cv').then(()=>{
